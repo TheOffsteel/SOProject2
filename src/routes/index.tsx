@@ -44,7 +44,6 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(monitorQuery),
   component: Dashboard,
 });
 
