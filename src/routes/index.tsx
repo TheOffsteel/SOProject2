@@ -62,7 +62,36 @@ function formatMem(mb: number | null) {
 }
 
 function Dashboard() {
-  const { data, isFetching, dataUpdatedAt } = useSuspenseQuery(monitorQuery);
+  const { data, isFetching, dataUpdatedAt, isLoading, isError } =
+    useQuery(monitorQuery);
+
+  if (isLoading || !data) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-3">
+          <div className="pulse-dot h-3 w-3 rounded-full bg-ember" />
+          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            conectando ao host…
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background px-6">
+        <div className="max-w-md rounded-2xl border border-destructive/40 bg-surface p-6 text-center">
+          <p className="font-display text-lg font-semibold text-destructive">
+            Falha ao consultar o monitor
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Verifique se o host está disponível e tente novamente.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const memUsed =
     data.memTotalMB && data.memFreeMB ? data.memTotalMB - data.memFreeMB : 0;
