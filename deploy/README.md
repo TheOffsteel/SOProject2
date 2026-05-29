@@ -23,7 +23,7 @@ npm start
    - **Build Command**: `npm install`
    - **Start Command**: `npm start`
    - **Environment**: Node
-4. Opcional — variável `SOURCE_URL` para apontar para outro host (default: `https://soproject.onrender.com/`).
-5. Deploy. Render injeta `PORT` automaticamente.
+4. Opcional — variável `SOURCE_URL` para apontar para outro host (default: `https://soproject2.onrender.com`).
+6. Deploy. Render injeta `PORT` automaticamente.
 
 Pronto.
