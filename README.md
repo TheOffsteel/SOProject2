@@ -583,8 +583,8 @@ O projeto separa claramente código-fonte, configurações e variáveis sensíve
 | Sistemas Operacionais Linux | Scripts shell, cron, logs, processos | ✅ |
 | Pipeline CI/CD | GitHub Actions com lint, build e deploy | ✅ |
 | Docker | Dockerfile + Docker Compose | ✅ |
-| Kubernetes | Deployment, Service e Ingress | ✅ |
-| Testes Automatizados | Testes unitários e de integração | ✅ |
+| Kubernetes | Deployment, Service e Ingress | ❌ |
+| Testes Automatizados | Testes unitários e de integração | ❌ |
 | Organização e documentação | README detalhado + DESIGN.md | ✅ |
 
 ---
