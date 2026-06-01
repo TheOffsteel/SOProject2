@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OS Monitor — Painel de telemetria</title>
+    <meta name="description" content="Painel de telemetria do sistema operacional: CPU, memória e uptime em tempo real." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <header class="utility-bar">
+      <div class="container util-row">
+        <span class="util-text">SISTEMA · TELEMETRIA AO VIVO</span>
+        <span class="util-text" id="utilClock">—</span>
+      </div>
+    </header>
+
+    <nav class="primary-nav">
+      <div class="container nav-row">
+        <a class="brand" href="/">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-text">os<strong>monitor</strong></span>
+        </a>
+        <div class="nav-links">
+          <a class="nav-link active" href="#dashboard">Dashboard</a>
+          <a class="nav-link" href="#host">Host</a>
+          <a class="nav-link" href="#memoria">Memória</a>
+        </div>
+        <div class="live-chip">
+          <span class="live-dot" id="liveDot"></span>
+          <span id="liveLabel">conectando…</span>
+        </div>
+      </div>
+    </nav>
+
+    <section class="sub-nav">
+      <div class="container sub-row">
+        <div class="select">
+          <span class="select-label">PAINEL</span>
+          <span class="select-value">KPI Dashboard</span>
+          <span class="select-caret">▾</span>
+        </div>
+        <div class="sub-actions">
+          <button class="btn-ghost" id="refreshBtn">
+            <span class="plus">+</span> Atualizar agora
+          </button>
+          <span class="meta" id="fetchedAt">—</span>
+        </div>
+      </div>
+    </section>
+
+    <main class="container main" id="dashboard">
+      <!-- HERO row: big green KPI + two stacked stats + bar chart -->
+      <section class="grid grid-hero">
+        <article class="card hero-card" aria-labelledby="hostTitle">
+          <span class="corner-square"></span>
+          <p class="eyebrow">Host monitorado</p>
+          <h2 class="hero-title" id="hostTitle"><span id="hostname">—</span></h2>
+          <dl class="hero-meta">
+            <div><dt>Plataforma</dt><dd id="platform">—</dd></div>
+            <div><dt>Arquitetura</dt><dd id="arch">—</dd></div>
+            <div><dt>Origem</dt><dd id="origin">—</dd></div>
+          </dl>
+        </article>
+
+        <article class="card kpi-card kpi-primary" aria-labelledby="uptimeTitle">
+          <div class="kpi-head">
+            <span class="kpi-icon" aria-hidden="true">◷</span>
+            <h3 class="kpi-label" id="uptimeTitle">Uptime</h3>
+          </div>
+          <p class="kpi-value" id="uptime">—</p>
+          <p class="kpi-sub" id="uptimeSub">— minutos</p>
+        </article>
+
+        <article class="card kpi-card" aria-labelledby="cpuTitle">
+          <div class="kpi-head">
+            <span class="kpi-icon" aria-hidden="true">▦</span>
+            <h3 class="kpi-label" id="cpuTitle">CPUs lógicos</h3>
+          </div>
+          <p class="kpi-value kpi-value-dark" id="cpus">—</p>
+          <div class="cpu-bars" id="cpuBars"></div>
+        </article>
+      </section>
+
+      <!-- Memory row -->
+      <section class="grid grid-mem" id="memoria">
+        <article class="card mem-card">
+          <header class="card-head">
+            <div>
+              <p class="eyebrow">Memória RAM</p>
+              <h3 class="card-title" id="memLine">—</h3>
+            </div>
+            <div class="big-pct">
+              <span id="memPct">—</span>
+              <small>EM USO</small>
+            </div>
+          </header>
+          <div class="mem-bar"><div class="mem-bar-fill" id="memBar" style="width:0%"></div></div>
+          <dl class="mem-grid">
+            <div><dt>Em uso</dt><dd id="memUsed" class="ink-green">—</dd></div>
+            <div><dt>Disponível</dt><dd id="memFree">—</dd></div>
+            <div><dt>Total</dt><dd id="memTotal">—</dd></div>
+            <div><dt>Livre %</dt><dd id="memFreePct">—</dd></div>
+          </dl>
+        </article>
+
+        <article class="card chart-card">
+          <header class="card-head">
+            <div>
+              <p class="eyebrow">Histórico</p>
+              <h3 class="card-title">Uso de memória · últimas 30 amostras</h3>
+            </div>
+            <span class="legend"><span class="legend-swatch"></span>% em uso</span>
+          </header>
+          <div class="chart-wrap">
+            <svg id="memChart" viewBox="0 0 600 220" preserveAspectRatio="none" aria-label="Histórico de uso de memória"></svg>
+          </div>
+        </article>
+      </section>
+
+      <!-- Bottom row: total mem callout + donut + table -->
+      <section class="grid grid-bottom" id="host">
+        <article class="card callout-card">
+          <p class="eyebrow">Capacidade total</p>
+          <p class="callout-value" id="memTotalBig">—</p>
+          <p class="callout-sub">memória do host (RAM)</p>
+        </article>
+
+        <article class="card donut-card">
+          <header class="card-head">
+            <div>
+              <p class="eyebrow">Distribuição</p>
+              <h3 class="card-title">Memória usada vs livre</h3>
+            </div>
+          </header>
+          <div class="donut-wrap">
+            <svg id="memDonut" viewBox="0 0 160 160" aria-label="Distribuição de memória"></svg>
+            <div class="donut-legend">
+              <div><span class="dot dot-green"></span>Em uso <strong id="donutUsed">—</strong></div>
+              <div><span class="dot dot-gray"></span>Livre <strong id="donutFree">—</strong></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card table-card">
+          <header class="card-head">
+            <div>
+              <p class="eyebrow">Resumo técnico</p>
+              <h3 class="card-title">Especificação do host</h3>
+            </div>
+          </header>
+          <table class="spec-table">
+            <tbody id="specTable">
+              <tr><th>Hostname</th><td data-k="hostname">—</td></tr>
+              <tr><th>Plataforma</th><td data-k="platform">—</td></tr>
+              <tr><th>Arquitetura</th><td data-k="arch">—</td></tr>
+              <tr><th>CPUs</th><td data-k="cpus">—</td></tr>
+              <tr><th>Memória total</th><td data-k="memTotal">—</td></tr>
+              <tr><th>Memória livre</th><td data-k="memFree">—</td></tr>
+              <tr><th>Uptime</th><td data-k="uptime">—</td></tr>
+            </tbody>
+          </table>
+        </article>
+      </section>
+
+      <div class="err-box" id="errBox" hidden>
+        <p><strong>Falha ao consultar o monitor.</strong></p>
+        <p>Verifique se o host está disponível e tente novamente.</p>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-row">
+        <div class="footer-brand">
+          <span class="brand-mark small" aria-hidden="true"></span>
+          <span>os<strong>monitor</strong></span>
+        </div>
+        <p class="footer-meta">Painel de telemetria · Node.js + Express · v1.0</p>
+      </div>
+      <div class="fine-print">
+        <div class="container">© <span id="year"></span> OS MONITOR · TODOS OS DIREITOS RESERVADOS</div>
+      </div>
+    </footer>
+
+    <script src="/js/app.js" defer></script>
+  </body>
+</html>
