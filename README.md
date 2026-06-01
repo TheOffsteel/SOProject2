@@ -556,7 +556,7 @@ bunx wrangler deploy --env staging
 
 A aplicação também está disponível em produção via Vercel:
 
-🌐 **[https://so-project2.vercel.app](https://so-project2.vercel.app)**
+🌐 **[https://so-project2.render.app](https://soproject2.onrender.com)**
 
 ---
 
