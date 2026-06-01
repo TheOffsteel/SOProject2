@@ -552,9 +552,9 @@ bunx wrangler deploy
 bunx wrangler deploy --env staging
 ```
 
-### Vercel (alternativo)
+### Render
 
-A aplicação também está disponível em produção via Vercel:
+A aplicação está disponível em produção via Render:
 
 🌐 **[https://so-project2.render.app](https://soproject2.onrender.com)**
 
